@@ -42,6 +42,7 @@ Page({
         },
         method: "GET",
         success: function (res) {
+          let status = res.data.status;
           if (status == 1) {
             console.log("商品详情", res.data.data);
             let goods_thumb = res.data.data.goods_thumb.split(",");
@@ -63,7 +64,8 @@ Page({
               })
             }
           } else {
-            tips.alert(res.data.msg);
+            console.log('失败')
+            //tips.alert(res.data.msg);
           }
           wx.hideLoading()
         }
@@ -84,9 +86,8 @@ Page({
   },
   // 领取
   receive(e){
-    // 获取客服号码
+    // 发起砍价
     let that = this;
-    let sum =11111111;
     let stock = that.data.stock;
     console.log('库存：',stock);
     if (stock > 0){ //have

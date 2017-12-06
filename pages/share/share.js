@@ -138,7 +138,8 @@ Page({
         if (status == 1){
             that.setData({
               cut_money:res.data.data,
-              kanjia: true
+              kanjia: true,
+              bargain_price: that.data.bargain_price - res.data.data
             })
         }else{
           tips.alert(res.data.msg)
