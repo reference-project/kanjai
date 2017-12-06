@@ -1,0 +1,73 @@
+<!--index.wxml-->
+<view class="container">
+      <swiper class="swiper" wx:if="{{lunbo.length !=0}}"  bindtap="imgPreview"  indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" indicator-color="#fff" indicator-active-color="#ff4444">
+      <block wx:for="{{lunbo}}">
+        <swiper-item>
+          <image src="{{item}}" class="slide-image" mode="aspectFill" id="{{index}}" catchtap="swipclick"/>
+        </swiper-item>
+      </block>
+    </swiper>
+    <!--text -->
+    <view class='text'>
+        <view class='title'>{{informAll.goods_title}}</view>
+        <view class='stock'>当前库存：{{informAll.surplus_count}}
+            <text class='stockColor'>【库存为0时，所有砍价将停止】</text>
+        </view>
+        <!-- <view class='price'>
+            <view class='left'>
+                <view>最低￥<text class='big'>0.00</text></view>   
+                <text class='color'>原价￥88.88</text>
+            </view>
+            <view class='right'>剩余：66件</view>
+        </view> -->
+    </view>
+    <!--inform  -->
+    <view class='progress'>
+        <view class='top'>
+            <image src="{{userInfo.avatarUrl}}" mode='widthFix'></image>
+            <view class='jindu'>砍价进度：原价{{informAll.goods_price}},已砍至{{informAll.bargain_price}}元</view>
+        </view>
+        <view class='bar'>
+            <view class='money' style='padding-left:{{width-10}}%'>￥{{informAll.bargain_price}}</view>
+            <view class='parents'></view>
+            <view class='child' style='padding-left:{{width}}%'></view>
+        </view>
+        <view class='priceBar'>
+            <view>￥{{informAll.goods_price}}</view><view>￥0.00</view>
+        </view>
+        <!-- <view class='time'>
+            活动结束倒计时：<text>1天1时1分</text>
+        </view> -->
+        <view class='time' wx:if="{{informAll.surplus_count<1}}">
+            活动提前结束：<text>已无更多库存</text>
+        </view>
+    </view>
+    <!--button  -->
+    <view class='buttons'>
+        <view bindtap='friends'>召唤好友帮我砍价</view>
+        <view bindtap='keep'>坎价记录</view>
+        <view bindtap='receive'>领取</view>
+    </view>
+    <view class='tab'>
+        <view class="tabItem {{index==1?'active':''}}" data-index="1" bindtap='checkTap'>商品详情</view>
+        <view class="tabItem {{index==2?'active':''}}" data-index="2" bindtap='checkTap'>活动规则</view>
+    </view>
+    <view class='content' wx:if="{{index==1}}">
+        <view wx:for="{{goods_desc}}">{{item}}</view>
+    </view>  
+    <view class='content' wx:if="{{index==2}}">
+        <view>1、原价30元萌宠衣服，本次活动只需0元即可领回家（包邮）；</view>
+        <view>2、本次活动仅限苏州地区用户，其他区域用户参与均视为无效，尽请谅解；</view>
+        <view>3、本次宠物衣服只限XS、S、M、L、XL，参与活动前请先核对好您家的宠物尺码；</view>
+        <view>4、砍价成功，请添加客服微信，由客服统一收集您的信息并由此信息发货；</view>
+        <view>5、本次活动衣服限量100件，手慢无；</view>
+        <view>6、本次活动最终解释权归宠宠邦（原宠趣e舍）所有。</view>
+        <view>7、邀请好友为你砍价，砍掉的金额随机，48小时内来砍价的好友越多，剩余金额商品越便宜集齐20个好友砍价，即免费赠送本商品；</view>
+    </view>  
+</view>
+<view class='bg' wx:if="{{share}}"></view>
+<view class='footer' wx:if="{{share}}"> 
+    <button form-type="submit" open-type='share'>转发</button>
+    <view bindtap='poster' class='poster'>朋友圈海报</view>
+    <view bindtap='cancel' class='cancel'>取消</view>
+</view>
