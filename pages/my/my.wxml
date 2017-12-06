@@ -9,12 +9,6 @@
 </view>
 <view class='all'>
     <view class="xuanze" bindtap="userinform">
-        <view class="classname"><image src="../img/home-icon.png" mode="widthFix"></image>我的砍价</view>
-        <view class="nextImg">
-            <image src="https://qncdn.playonwechat.com/shangcheng/next.png" mode="widthFix"/>
-        </view> 
-    </view>
-    <view class="xuanze" bindtap="userinform">
         <view class="classname"><image src="../img/home-icon.png" mode="widthFix"></image>关于我们</view>
         <view class="nextImg">
             <image src="https://qncdn.playonwechat.com/shangcheng/next.png" mode="widthFix"/>

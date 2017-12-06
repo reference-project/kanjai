@@ -73,15 +73,15 @@ Page({
       })
     })
   },
-  //我也参加
+  //我也参加 关闭所有页面
   join(){
-    wx.switchTab({
+    wx.reLaunch({
       url: '../index/index'
     })
   },
   // 分享
   myself(){
-    wx.navigateTo({
+    wx.reLaunch({
       url: '../inform/inform?bargain_id=' + this.data.already_bargain
     })
   },
