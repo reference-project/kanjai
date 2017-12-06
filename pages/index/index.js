@@ -42,6 +42,7 @@ Page({
         },
         method: "GET",
         success: function (res) {
+          if (status == 1) {
             console.log("商品详情", res.data.data);
             let goods_thumb = res.data.data.goods_thumb.split(",");
             let goods_desc = res.data.data.goods_desc.split(",");
@@ -53,15 +54,18 @@ Page({
               already_bargain: res.data.data.already_bargain,
               stock: res.data.data.total_count - res.data.data.sale_count
             })
-            if (goods_thumb.length>1){ //如果封面图length>1出现轮播点
-                that.setData({
-                  indicatorDots: true,
-                  autoplay: true,
-                  interval: 3000,
-                  duration: 1000,
-                })
+            if (goods_thumb.length > 1) { //如果封面图length>1出现轮播点
+              that.setData({
+                indicatorDots: true,
+                autoplay: true,
+                interval: 3000,
+                duration: 1000,
+              })
             }
-           wx.hideLoading()
+          } else {
+            tips.alert(res.data.msg);
+          }
+          wx.hideLoading()
         }
       })
     })

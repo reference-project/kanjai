@@ -34,8 +34,8 @@
     <!--button  -->
     <view class='buttons'>
         <!--如果参加过未参加过  -->
-        <view bindtap='join'>我也参加</view>
-        <view bindtap='myself'>我的砍价</view>
+        <view bindtap='join' wx:if="{{already_bargain==false}}">我也参加</view>
+        <view bindtap='myself' wx:else>我的砍价</view>
         <view bindtap='help' data-value="{{informAll.can_bargain}}">帮TA坎价</view>
     </view>
 </view>
