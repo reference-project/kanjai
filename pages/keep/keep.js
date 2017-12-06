@@ -22,10 +22,31 @@ Page({
         console.log(res)
         let status = res.data.status;
         if (status==1){
-            console.log("砍价列表", res.data.data);
-            that.setData({
-              informAll: res.data.data
-            })
+          //时间戳转化
+          function toDate(number) {
+            var n = number * 1000;
+            var date = new Date(n);
+            console.log("date", date)
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            var h = date.getHours();
+            h = h < 10 ? ('0' + h) : h;
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+            minute = minute < 10 ? ('0' + minute) : minute;
+            second = second < 10 ? ('0' + second) : second;
+            return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+          }
+          for (var i = 0; i < res.data.data.length; i++) {
+            res.data.data[i].time = toDate(res.data.data[i].time)
+          }
+          console.log("砍价列表", res.data.data);
+          that.setData({
+            informAll: res.data.data
+          })
         }else{
           that.setData({
             informAll: false
@@ -61,7 +82,32 @@ Page({
         console.log("新可能认识的人:", res);
         let status = res.data.status;
         if (status == 1) {
+          
+          //时间戳转化
+          function toDate(number) {
+            var n = number * 1000;
+            var date = new Date(n);
+            console.log("date", date)
+            var y = date.getFullYear();
+            var m = date.getMonth() + 1;
+            m = m < 10 ? ('0' + m) : m;
+            var d = date.getDate();
+            d = d < 10 ? ('0' + d) : d;
+            var h = date.getHours();
+            h = h < 10 ? ('0' + h) : h;
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+            minute = minute < 10 ? ('0' + minute) : minute;
+            second = second < 10 ? ('0' + second) : second;
+            return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+          }
+          for (var i = 0; i < res.data.data.length; i++) {
+            res.data.data[i].time = toDate(res.data.data[i].time)
+          }
           var informAll = res.data.data;
+          that.setData({
+            informAll: res.data.data
+          })
           if (informAll.length == 0) {
             tips.alert('没有更多数据了');
             return;

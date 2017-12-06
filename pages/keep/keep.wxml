@@ -11,18 +11,4 @@
             砍后价格<text>{{item.surplus_money}}</text>
         </view>
     </view>
-    <view class='item' wx:for="{{informAll}}" wx:key="{{index}}">
-        <image src="{{item.member_info.avatarurl}}" mode='widthFix'></image>
-        <view class='content'>
-            <text>{{item.member_info.wx_name}}</text>于{{item.time}}帮您砍掉了<text>{{item.cut_money}}元</text>
-            砍后价格<text>{{item.surplus_money}}</text>
-        </view>
-    </view>
-    <view class='item' wx:for="{{informAll}}" wx:key="{{index}}">
-        <image src="{{item.member_info.avatarurl}}" mode='widthFix'></image>
-        <view class='content'>
-            <text>{{item.member_info.wx_name}}</text>于{{item.time}}帮您砍掉了<text>{{item.cut_money}}元</text>
-            砍后价格<text>{{item.surplus_money}}</text>
-        </view>
-    </view>
 </view>
