@@ -123,6 +123,10 @@ page{
   opacity: 0.5;
   z-index: 6;
 }
+.hidden{
+  overflow: hidden;
+  height: 100%;
+}
 .footer{
   font-size: 32rpx;
   position: fixed;

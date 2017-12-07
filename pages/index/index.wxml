@@ -18,20 +18,6 @@
             <view class='right'>剩余：{{stock}}件</view>
         </view> 
     </view>
-    <!-- <view class='nowPrice'>
-        <view class='item'>
-            <view class='pay'>{{informAll.total_count}}</view>
-            <view>人查看</view>
-        </view> 
-        <view class='item two'>
-            <view class='pay'>{{informAll.bargain_count}}</view>
-            <view>人参与</view>
-        </view>
-        <view class='item'>
-            <view class='pay'>{{informAll.total_count}}</view>
-            <view>人帮坎</view>
-        </view>
-    </view> -->
     <!--button  -->
     <view class='buttons'>
         <view class='Countdown'>

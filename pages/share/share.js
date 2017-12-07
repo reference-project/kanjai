@@ -36,7 +36,7 @@ Page({
           let num1 = res.data.data.goods_price - res.data.data.bargain_price;
           that.setData({
             informAll: res.data.data,
-            luobo: goods_thumb,
+            lunbo: goods_thumb,
             width: (num1 / res.data.data.goods_price).toFixed(2) * 100,
             bargain_price: res.data.data.bargain_price
           })

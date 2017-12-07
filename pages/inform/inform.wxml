@@ -1,5 +1,5 @@
 <!--index.wxml-->
-<view class="container">
+<view class="container {{share==true?'hidden':''}}" >
       <swiper class="swiper" wx:if="{{lunbo.length !=0}}"  bindtap="imgPreview"  indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" indicator-color="#fff" indicator-active-color="#ff4444">
       <block wx:for="{{lunbo}}">
         <swiper-item>
@@ -13,13 +13,6 @@
         <view class='stock'>当前库存：{{informAll.surplus_count}}
             <text class='stockColor'>【库存为0时，所有砍价将停止】</text>
         </view>
-        <!-- <view class='price'>
-            <view class='left'>
-                <view>最低￥<text class='big'>0.00</text></view>   
-                <text class='color'>原价￥88.88</text>
-            </view>
-            <view class='right'>剩余：66件</view>
-        </view> -->
     </view>
     <!--inform  -->
     <view class='progress'>
@@ -35,9 +28,6 @@
         <view class='priceBar'>
             <view>￥{{informAll.goods_price}}</view><view>￥0.00</view>
         </view>
-        <!-- <view class='time'>
-            活动结束倒计时：<text>1天1时1分</text>
-        </view> -->
         <view class='time' wx:if="{{informAll.surplus_count<1}}">
             活动提前结束：<text>已无更多库存</text>
         </view>

@@ -21,9 +21,7 @@ Page({
       that.setData({
         bargain_id: bargain_id
       })
-      wx.navigateTo({
-        url: '../share/share?bargain_id=' + that.data.bargain_id,
-      })
+      
     }
     
   },
@@ -35,6 +33,11 @@ Page({
     app.getAuth(function () {
       let userInfo = wx.getStorageSync('userInfo');
       let sign = wx.getStorageSync('sign');
+      if (that.data.bargain_id){
+        wx.navigateTo({
+          url: '../share/share?bargain_id=' + that.data.bargain_id,
+        })
+      }
       wx.request({
         url: apiurl + "bargain/goods-detail?sign=" + sign + '&operator_id=' + app.data.kid,
         header: {
@@ -50,7 +53,7 @@ Page({
             wx.setStorageSync('goods_desc', goods_desc);
             that.setData({
               informAll: res.data.data,
-              luobo: goods_thumb,
+              lunbo: goods_thumb,
               goods_desc: goods_desc,
               already_bargain: res.data.data.already_bargain,
               stock: res.data.data.total_count - res.data.data.sale_count
@@ -64,7 +67,7 @@ Page({
               })
             }
           } else {
-            console.log('失败')
+            console.log(res,'失败')
             //tips.alert(res.data.msg);
           }
           wx.hideLoading()
@@ -89,11 +92,12 @@ Page({
     // 发起砍价
     let that = this;
     let stock = that.data.stock;
+    let sign = wx.getStorageSync('sign');
     console.log('库存：',stock);
     if (stock > 0){ //have
       console.log('砍价already_bargain',that.data.already_bargain)
       if (that.data.already_bargain == false){ //未发起过
-      console.log(111111)
+      console.log("请求砍价id：",apiurl + "bargain/create-bargain?sign=" + sign + '&operator_id=' + app.data.kid +'&goods_id='+that.data.informAll.goods_id)
         wx.request({
           url: apiurl + "bargain/create-bargain?sign=" + sign + '&operator_id=' + app.data.kid,
           data: {
@@ -104,18 +108,24 @@ Page({
           },
           method: "GET",
           success: function (res) {
-            console.log("砍价id", res.data.data);
-            that.setData({
-              bargain_id: res.data.data
-            })
+            console.log("砍价id  index", res);
+            let status = res.data.status;
+            if (status==1){
+              console.log("bargain_id", res.data.data);
+              that.setData({
+                bargain_id: res.data.data
+              })
+              wx.navigateTo({
+                url: '../inform/inform?bargain_id=' + that.data.bargain_id
+              })
+            }else{
+              console.log(res.data.data);
+              tips.alert('获取bargain_id失败！')
+            }
+            
             wx.hideLoading()
           }
         })
-        setTimeout(function(){
-          wx.navigateTo({
-            url: '../inform/inform?bargain_id=' + that.data.bargain_id
-          })
-        },20)
       }else{ 
         wx.navigateTo({
           url: '../inform/inform?bargain_id=' + that.data.already_bargain
