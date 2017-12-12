@@ -21,7 +21,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": -1,
 			"list": [
 				{
 					"id": 0,
@@ -39,7 +39,7 @@
 					"id": 2,
 					"name": "砍价详情",
 					"pathName": "pages/inform/inform",
-					"query": "bargain_id=1"
+					"query": "bargain_id=26"
 				},
 				{
 					"id": 3,

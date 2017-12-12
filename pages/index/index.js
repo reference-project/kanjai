@@ -75,6 +75,7 @@ Page({
                 console.log("商品详情", res.data.data);
                 let goods_desc = res.data.data.goods_desc;
                 wx.setStorageSync('goods_desc', goods_desc);
+                wx.setStorageSync('rules', res.data.data.rules);
                 that.setData({
                   informAll: res.data.data,
                   goods_thumb: res.data.data.goods_thumb,

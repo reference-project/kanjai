@@ -128,6 +128,7 @@ Page({
     })
   },
   finishTap(){
+    console.log("finishTap");
     this.setData({
       finish: false
     })

@@ -19,9 +19,11 @@ Page({
       let that = this;
       let userInfo = wx.getStorageSync('userInfo');
       let sign = wx.getStorageSync('sign');
+      let rules = wx.getStorageSync('rules').split("\n");
       that.setData({
         goods_desc: wx.getStorageSync('goods_desc'),
-        userInfo:userInfo
+        userInfo:userInfo,
+        rules: rules
       })
       wx.request({
         url: apiurl + "bargain/bargain-detail?sign=" + sign + '&operator_id=' + app.data.kid,

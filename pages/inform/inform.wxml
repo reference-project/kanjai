@@ -48,14 +48,7 @@
         </view>
     </view>  
     <view class='content' wx:if="{{index==2}}">
-        <view>1、邀请好友为你砍价，砍价存在48小时，砍价金额随机，邀请来砍价的好友越多，剩余金额越少，即商品价格越便宜，如集齐{{bargain_count}}位好友砍价，即免费赠送本商品。</view>
-        <view>2、本次宠物衣服只限XS、S、M、L、XL，参与活动前请先行核对您家萌宠的尺码</view>
-        <view>3、砍价成功后，请添加客服微信，届时将统一收集您的信息，并根据信息核发</view>
-        <view>4、本次活动仅限苏州本地用户，敬请谅解</view>
-        <view>5、本次活动衣服仅限量100件，手慢无</view>
-        <view>6、本商品邮费由宠宠邦（宠趣E舍）承担</view>
-        <view>7、本次活动最终解释权归宠宠邦（宠趣E舍）所有</view>
-            
+        <view wx:for="{{rules}}" wx:key="{{index}}">{{item}}</view>
     </view>  
   </view>
 <view class='bg' wx:if="{{share}}"></view>
