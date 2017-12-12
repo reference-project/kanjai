@@ -6,7 +6,7 @@ App({
   onLaunch: function () {
     let that = this;
     let extConfig = wx.getExtConfigSync ? wx.getExtConfigSync() : {};
-    that.data.kid = extConfig.kid ? extConfig.kid : '321';
+    that.data.kid = extConfig.kid ? extConfig.kid : '123';
     wx.setStorageSync('kid', that.data.kid); //that.data.kid
     this.getAuth();
   },

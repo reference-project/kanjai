@@ -5,7 +5,8 @@ let sign = wx.getStorageSync('sign');
 import tips from '../../utils/tips.js'
 Page({
   data: {
-    index: 1 //tab切换
+    index: 2, //tab切换
+    finish:false
   },
   //事件处理函数
   onLoad: function (option) {
@@ -33,15 +34,15 @@ Page({
         method: "GET",
         success: function (res) {
           console.log("砍价详情", res.data.data);
-          let goods_thumb = res.data.data.goods_thumb.split(",");
           let num1 = res.data.data.goods_price - res.data.data.bargain_price;
           that.setData({
             informAll: res.data.data,
-            lunbo: goods_thumb,
+            lunbo: res.data.data.goods_thumb,
             width: (num1 / res.data.data.goods_price).toFixed(2)*100,
-            bargain_price: res.data.data.bargain_price
+            bargain_price: res.data.data.bargain_price,
+            bargain_count: res.data.data.bargain_count //好友数量
           })
-          if (goods_thumb.length > 1) { //如果封面图length>1出现轮播点
+          if (res.data.data.goods_thumb.length > 1) { //如果封面图length>1出现轮播点
             that.setData({
               indicatorDots: true,
               autoplay: true,
@@ -149,35 +150,17 @@ Page({
     })
     if (that.data.ReceiveCode!=false){
       //领取信息
-      wx.showModal({
-        content: '请添加客服微信"' + that.data.kf + '"加好友领取商品！领取码为"' + that.data.ReceiveCode + '"',
-        confirmText: "知道了",
-        cancelText: "复制",
-        success: function (res) {
-          if (res.confirm) { //ok
-            console.log(1);
-          } else { //copy
-            console.log(2);
-            wx.setClipboardData({
-              data: '客服微信:' + that.data.kf + ',领取码为:' + that.data.ReceiveCode,
-              success: function (res) {
-                wx.getClipboardData({
-                  success: function (res) {
-                    console.log(res.data) // data
-                    tips.success('复制成功，快去添加微信好友领取！')
-                  }
-                })
-              }
-            })
-          }
-        }
-      });
+      that.setData({
+        ReceiveCode: that.data.ReceiveCode,
+        finish: true
+      })
       console.log("that.data.ReceiveCode:", that.data.ReceiveCode);
     }else{
+    //  content: '您还未邀请' + that.data.informAll.bargain_count + '个好友帮忙砍价，（可以继续邀请，满'+ that.data.informAll.bargain_count +'个好友可免费获得，或支付剩余金额获得商品）',
         wx.showModal({
-          content: '您还未邀请' + that.data.informAll.bargain_count + '个好友帮忙砍价，（可以继续邀请，满'+ that.data.informAll.bargain_count +'个好友可免费获得，或支付剩余金额获得商品）',
+          content: '您还未邀请' + that.data.informAll.bargain_count + '个好友帮忙砍价',
           confirmText: "去邀请",
-          cancelText: "去支付",
+          //cancelText: "去支付",
           success: function (res) {
             if (res.confirm) { //ok
               that.setData({
@@ -187,97 +170,92 @@ Page({
 
             } else { //go pay 
               console.log('go pay');
-              wx.request({
-                url: apiurl + "bargain/buy?sign=" + sign + '&operator_id=' + app.data.kid,
-                data:{
-                  bargain_id: that.data.bargain_id
-                },
-                header: {
-                  'content-type': 'application/json'
-                },
-                method: "GET",
-                success: function (res) {
-                  console.log("购买", res);
-                  let status = res.data.status;
-                  if (status == 1) {
-                    console.log(res.data.data);
-                    wx.requestPayment({
-                      timeStamp: res.data.data.timeStamp,
-                      nonceStr: res.data.data.nonceStr,
-                      package: res.data.data.package,
-                      signType: res.data.data.signType,
-                      paySign: res.data.data.paySign,
-                      'success': function (res) {  //成功
-                          tips.success('支付成功！');
-                          // wx.showLoading({
-                          //   title: '领取码生成中！',
-                          // })
-                          // 领取码
-                          console.log("支付完成请求领取码",apiurl + "bargain/get-code?sign=" + sign + '&operator_id=' + app.data.kid);
-                          wx.request({
-                            url: apiurl + "bargain/get-code?sign=" + sign + '&operator_id=' + app.data.kid,
-                            header: {
-                              'content-type': 'application/json'
-                            },
-                            method: "GET",
-                            success: function (res) {
-                              console.log("获取领取码支付", res);
-                              let status = res.data.status;
-                              if (status == 1) {
-                                that.setData({
-                                  ReceiveCode: res.data.data
-                                })
-                                wx.showModal({
-                                  content: '请添加客服微信"' + that.data.kf + '"加好友领取商品！领取码为"' + that.data.ReceiveCode + '"',
-                                  confirmText: "知道了",
-                                  cancelText: "复制",
-                                  success: function (res) {
-                                    if (res.confirm) { //ok
-                                      console.log(1);
-                                    } else { //copy
-                                      console.log(2);
-                                      wx.setClipboardData({
-                                        data: '客服微信:' + that.data.kf + ',领取码为:' + that.data.ReceiveCode,
-                                        success: function (res) {
-                                          wx.getClipboardData({
-                                            success: function (res) {
-                                              console.log(res.data) // data
-                                              tips.success('复制成功，快去添加微信好友领取！')
-                                            }
-                                          })
-                                        }
-                                      })
-                                    }
-                                  }
-                                });
-                              } else {
-                                //tips.alert(res.data.msg);
-                                console.log(res.data.msg);
-                                that.setData({
-                                  ReceiveCode: false
-                                })
-                              }
-                            }
-                          })
+              // wx.request({
+              //   url: apiurl + "bargain/buy?sign=" + sign + '&operator_id=' + app.data.kid,
+              //   data:{
+              //     bargain_id: that.data.bargain_id
+              //   },
+              //   header: {
+              //     'content-type': 'application/json'
+              //   },
+              //   method: "GET",
+              //   success: function (res) {
+              //     console.log("购买", res);
+              //     let status = res.data.status;
+              //     if (status == 1) {
+              //       console.log(res.data.data);
+              //       wx.requestPayment({
+              //         timeStamp: res.data.data.timeStamp,
+              //         nonceStr: res.data.data.nonceStr,
+              //         package: res.data.data.package,
+              //         signType: res.data.data.signType,
+              //         paySign: res.data.data.paySign,
+              //         'success': function (res) {  //成功
+              //             tips.success('支付成功！');
+              //             // wx.showLoading({
+              //             //   title: '领取码生成中！',
+              //             // })
+              //             // 领取码
+              //             console.log("支付完成请求领取码",apiurl + "bargain/get-code?sign=" + sign + '&operator_id=' + app.data.kid);
+              //             wx.request({
+              //               url: apiurl + "bargain/get-code?sign=" + sign + '&operator_id=' + app.data.kid,
+              //               header: {
+              //                 'content-type': 'application/json'
+              //               },
+              //               method: "GET",
+              //               success: function (res) {
+              //                 console.log("获取领取码支付", res);
+              //                 let status = res.data.status;
+              //                 if (status == 1) {
+              //                   that.setData({
+              //                     ReceiveCode: res.data.data,
+              //                     finish:true
+              //                   })
+              //                 } else {
+              //                   //tips.alert(res.data.msg);
+              //                   console.log(res.data.msg);
+              //                   that.setData({
+              //                     ReceiveCode: false
+              //                   })
+              //                 }
+              //               }
+              //             })
                          
                          
-                      },
-                      'fail': function (res) {  //失败
-                        tips.alert('支付失败！')
-                      }
+              //         },
+              //         'fail': function (res) {  //失败
+              //           tips.alert('支付失败！')
+              //         }
                       
-                    })
-                    wx.hideLoading()
-                  } else {
-                    tips.alert(res.data.msg);
-                  }
-                }
-              })
+              //       })
+              //       wx.hideLoading()
+              //     } else {
+              //       tips.alert(res.data.msg);
+              //     }
+              //   }
+              // })
             }
           }
         })
     }
-    
+  },
+  // 复制二维码
+  mine() {
+    let that = this;
+    wx.setClipboardData({
+      data: '领取码为:' + that.data.ReceiveCode,
+      success: function (res) {
+        wx.getClipboardData({
+          success: function (res) {
+            console.log(res.data) // data
+            tips.success('复制成功，快去添加微信好友领取！')
+            that.setData({
+              finish:false
+            })
+          }
+        })
+      }
+    })
   },
   //轮播图
   swipclick: function () { //图片预览
@@ -286,6 +264,23 @@ Page({
     wx.previewImage({
       current: imgs[this.data.currentIndex], // 当前显示图片的http链接
       urls: imgs // 需要预览的图片http链接列表
+    })
+  },
+  //商品图
+  imggoods: function () { //图片预览
+    const goods_desc = this.data.goods_desc;
+    console.log("const");
+    wx.previewImage({
+      current: goods_desc[this.data.currentIndex], // 当前显示图片的http链接
+      urls: goods_desc // 需要预览的图片http链接列表
+    })
+  },
+  seeEwm(){
+    let kf = this.data.kf;
+    let kf1 = this.data.kf.split();
+    wx.previewImage({
+      current: kf, // 当前显示图片的http链接
+      urls: kf1 // 需要预览的图片http链接列表
     })
   },
   // 海报
@@ -307,6 +302,7 @@ Page({
       },
       method: "GET",
       success: function (res) {
+        console.log("shar:",res);
         console.log("海报", res.data.data);
         that.setData({
           imgUrl: res.data.data,

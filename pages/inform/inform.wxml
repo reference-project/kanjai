@@ -35,29 +35,40 @@
     <!--button  -->
     <view class='buttons'>
         <view bindtap='friends'>召唤好友帮我砍价</view>
-        <view bindtap='keep'>坎价记录</view>
+        <view bindtap='keep'>砍价记录</view>
         <view bindtap='receive'>领取</view>
     </view>
     <view class='tab'>
-        <view class="tabItem {{index==1?'active':''}}" data-index="1" bindtap='checkTap'>商品详情</view>
         <view class="tabItem {{index==2?'active':''}}" data-index="2" bindtap='checkTap'>活动规则</view>
+        <view class="tabItem {{index==1?'active':''}}" data-index="1" bindtap='checkTap'>商品详情</view>
     </view>
     <view class='content' wx:if="{{index==1}}">
-        <view wx:for="{{goods_desc}}">{{item}}</view>
+        <view wx:for="{{goods_desc}}">
+            <image src="{{item}}" id="{{index}}" mode='widthFix' bindtap="imggoods"></image>
+        </view>
     </view>  
     <view class='content' wx:if="{{index==2}}">
-        <view>1、原价30元萌宠衣服，本次活动只需0元即可领回家（包邮）；</view>
-        <view>2、本次活动仅限苏州地区用户，其他区域用户参与均视为无效，尽请谅解；</view>
-        <view>3、本次宠物衣服只限XS、S、M、L、XL，参与活动前请先核对好您家的宠物尺码；</view>
-        <view>4、砍价成功，请添加客服微信，由客服统一收集您的信息并由此信息发货；</view>
-        <view>5、本次活动衣服限量100件，手慢无；</view>
-        <view>6、本次活动最终解释权归宠宠邦（原宠趣e舍）所有。</view>
-        <view>7、邀请好友为你砍价，砍掉的金额随机，48小时内来砍价的好友越多，剩余金额商品越便宜集齐20个好友砍价，即免费赠送本商品；</view>
+        <view>1、邀请好友为你砍价，砍价存在48小时，砍价金额随机，邀请来砍价的好友越多，剩余金额越少，即商品价格越便宜，如集齐{{bargain_count}}位好友砍价，即免费赠送本商品。</view>
+        <view>2、本次宠物衣服只限XS、S、M、L、XL，参与活动前请先行核对您家萌宠的尺码</view>
+        <view>3、砍价成功后，请添加客服微信，届时将统一收集您的信息，并根据信息核发</view>
+        <view>4、本次活动仅限苏州本地用户，敬请谅解</view>
+        <view>5、本次活动衣服仅限量100件，手慢无</view>
+        <view>6、本商品邮费由宠宠邦（宠趣E舍）承担</view>
+        <view>7、本次活动最终解释权归宠宠邦（宠趣E舍）所有</view>
+            
     </view>  
-</view>
+  </view>
 <view class='bg' wx:if="{{share}}"></view>
 <view class='footer' wx:if="{{share}}"> 
     <button form-type="submit" open-type='share'>转发</button>
     <view bindtap='poster' class='poster'>朋友圈海报</view>
     <view bindtap='cancel' class='cancel'>取消</view>
+</view>
+<view class='bg' wx:if="{{finish}}"></view>
+<view class='kanjia' wx:if="{{finish}}">
+    <image src='{{kf}}' mode='widthFix' bindtap='seeEwm'></image>
+    <view class='less'>添加客服微信领取</view>
+    <view class='less'>将二维码保存到手机扫描添加</view>
+    <view class='little'>你的领取码为：{{ReceiveCode}}</view>
+    <view class='mine' bindtap='mine'>复制领取码</view>
 </view>

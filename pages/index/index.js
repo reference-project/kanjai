@@ -5,7 +5,12 @@ let sign = wx.getStorageSync('sign');
 import tips from '../../utils/tips.js'
 Page({
   data: {
-    index:1 //tab切换
+    index:1, //tab切换
+    indicatorDots: true,
+    autoplay: true,
+    interval: 3000,
+    duration: 1000,
+    activity:true
   },
   //事件处理函数
   onLoad: function (options) {
@@ -37,42 +42,59 @@ Page({
         wx.navigateTo({
           url: '../share/share?bargain_id=' + that.data.bargain_id,
         })
-      }
-      wx.request({
-        url: apiurl + "bargain/goods-detail?sign=" + sign + '&operator_id=' + app.data.kid,
-        header: {
-          'content-type': 'application/json'
-        },
-        method: "GET",
-        success: function (res) {
-          let status = res.data.status;
-          if (status == 1) {
-            console.log("商品详情", res.data.data);
-            let goods_thumb = res.data.data.goods_thumb.split(",");
-            let goods_desc = res.data.data.goods_desc.split(",");
-            wx.setStorageSync('goods_desc', goods_desc);
-            that.setData({
-              informAll: res.data.data,
-              lunbo: goods_thumb,
-              goods_desc: goods_desc,
-              already_bargain: res.data.data.already_bargain,
-              stock: res.data.data.total_count - res.data.data.sale_count
-            })
-            if (goods_thumb.length > 1) { //如果封面图length>1出现轮播点
-              that.setData({
-                indicatorDots: true,
-                autoplay: true,
-                interval: 3000,
-                duration: 1000,
-              })
+      }else{
+          // banner
+          wx.request({
+            url: apiurl + "bargain/banner?sign=" + sign + '&operator_id=' + app.data.kid,
+            header: {
+              'content-type': 'application/json'
+            },
+            method: "GET",
+            success: function (res) {
+              console.log("获取轮播图", res);
+              let status = res.data.status;
+              if (status == 1) {
+                that.setData({
+                  banner: res.data.data
+                })
+              } else {
+                console.log(res.data.msg);
+                
+              }
             }
-          } else {
-            console.log(res,'失败')
-            //tips.alert(res.data.msg);
-          }
-          wx.hideLoading()
-        }
-      })
+          })
+          wx.request({
+            url: apiurl + "bargain/goods-detail?sign=" + sign + '&operator_id=' + app.data.kid,
+            header: {
+              'content-type': 'application/json'
+            },
+            method: "GET",
+            success: function (res) {
+              let status = res.data.status;
+              if (status == 1) {
+                console.log("商品详情", res.data.data);
+                let goods_desc = res.data.data.goods_desc;
+                wx.setStorageSync('goods_desc', goods_desc);
+                that.setData({
+                  informAll: res.data.data,
+                  goods_thumb: res.data.data.goods_thumb,
+                  goods_desc: goods_desc,
+                  already_bargain: res.data.data.already_bargain,
+                  stock: res.data.data.total_count - res.data.data.sale_count
+                })
+                if (res.data.data.total_count - res.data.data.sale_count<1) { //如果库存为0
+                  that.setData({
+                    activity: false
+                  })
+                }
+              } else {
+                console.log(res,'失败')
+                //tips.alert(res.data.msg);
+              }
+              wx.hideLoading()
+            }
+          })
+      }
     })
   },
   // 切换
@@ -94,7 +116,13 @@ Page({
     let stock = that.data.stock;
     let sign = wx.getStorageSync('sign');
     console.log('库存：',stock);
+    console.log('bargain_id:',that.data.bargain_id)
+    console.log('already_bargain',that.data.already_bargain)
+    // wx.navigateTo({
+    //   url: '../inform/inform?bargain_id=' + that.data.bargain_id
+    // })
     if (stock > 0){ //have
+
       console.log('砍价already_bargain',that.data.already_bargain)
       if (that.data.already_bargain == false){ //未发起过
       console.log("请求砍价id：",apiurl + "bargain/create-bargain?sign=" + sign + '&operator_id=' + app.data.kid +'&goods_id='+that.data.informAll.goods_id)
@@ -138,7 +166,8 @@ Page({
           showCancel: false,
           confirmText: "确定"
         })
-      } else {
+      } 
+      else {
           wx.navigateTo({
             url: '../inform/inform?bargain_id=' + that.data.already_bargain
           })

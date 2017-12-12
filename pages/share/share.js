@@ -6,7 +6,8 @@ import tips from '../../utils/tips.js'
 Page({
   data: {
     share:false, //分享好友
-    bargain:false
+    bargain:false,
+    finish: false
   },
   //事件处理函数
   onLoad: function (option) {
@@ -20,6 +21,7 @@ Page({
     app.getAuth(function () {
       let userInfo = wx.getStorageSync('userInfo');
       let sign = wx.getStorageSync('sign');
+      console.log(apiurl + "bargain/bargain-detail?sign=" + sign + '&operator_id=' + app.data.kid)
       // 详情
       wx.request({
         url: apiurl + "bargain/bargain-detail?sign=" + sign + '&operator_id=' + app.data.kid,
@@ -32,13 +34,18 @@ Page({
         method: "GET",
         success: function (res) {
           console.log("砍价详情", res.data.data);
-          let goods_thumb = res.data.data.goods_thumb.split(",");
+          let goods_thumb = res.data.data.goods_thumb;
           let num1 = res.data.data.goods_price - res.data.data.bargain_price;
+          if (res.data.data.bargain_count == res.data.data.bargain_count_all){
+               that.setData({
+                 finish:true
+               }) 
+          }
           that.setData({
             informAll: res.data.data,
             lunbo: goods_thumb,
             width: (num1 / res.data.data.goods_price).toFixed(2) * 100,
-            bargain_price: res.data.data.bargain_price
+            bargain_price: parseInt(res.data.data.bargain_price) 
           })
           if (goods_thumb.length > 1) { //如果封面图length>1出现轮播点
             that.setData({
@@ -118,6 +125,11 @@ Page({
   mine(){
     this.setData({
         kanjia:false
+    })
+  },
+  finishTap(){
+    this.setData({
+      finish: false
     })
   },
   help(){
