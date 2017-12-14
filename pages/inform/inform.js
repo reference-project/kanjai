@@ -150,19 +150,20 @@ Page({
         }
       }
     })
+    // that.data.ReceiveCode!=false
     if (that.data.ReceiveCode!=false){
       //领取信息
       that.setData({
         ReceiveCode: that.data.ReceiveCode,
         finish: true
       })
-      console.log("that.data.ReceiveCode:", that.data.ReceiveCode);
+      //console.log("that.data.ReceiveCode:", that.data.ReceiveCode);
     }else{
-    //  content: '您还未邀请' + that.data.informAll.bargain_count + '个好友帮忙砍价，（可以继续邀请，满'+ that.data.informAll.bargain_count +'个好友可免费获得，或支付剩余金额获得商品）',
+        content: '您还未邀请' + that.data.informAll.bargain_count + '个好友帮忙砍价，（可以继续邀请，满'+ that.data.informAll.bargain_count +'个好友可免费获得，或支付剩余金额获得商品）',
         wx.showModal({
           content: '您还未邀请' + that.data.informAll.bargain_count + '个好友帮忙砍价',
           confirmText: "去邀请",
-          //cancelText: "去支付",
+          cancelText: "去支付",
           success: function (res) {
             if (res.confirm) { //ok
               that.setData({
@@ -172,74 +173,84 @@ Page({
 
             } else { //go pay 
               console.log('go pay');
-              // wx.request({
-              //   url: apiurl + "bargain/buy?sign=" + sign + '&operator_id=' + app.data.kid,
-              //   data:{
-              //     bargain_id: that.data.bargain_id
-              //   },
-              //   header: {
-              //     'content-type': 'application/json'
-              //   },
-              //   method: "GET",
-              //   success: function (res) {
-              //     console.log("购买", res);
-              //     let status = res.data.status;
-              //     if (status == 1) {
-              //       console.log(res.data.data);
-              //       wx.requestPayment({
-              //         timeStamp: res.data.data.timeStamp,
-              //         nonceStr: res.data.data.nonceStr,
-              //         package: res.data.data.package,
-              //         signType: res.data.data.signType,
-              //         paySign: res.data.data.paySign,
-              //         'success': function (res) {  //成功
-              //             tips.success('支付成功！');
-              //             // wx.showLoading({
-              //             //   title: '领取码生成中！',
-              //             // })
-              //             // 领取码
-              //             console.log("支付完成请求领取码",apiurl + "bargain/get-code?sign=" + sign + '&operator_id=' + app.data.kid);
-              //             wx.request({
-              //               url: apiurl + "bargain/get-code?sign=" + sign + '&operator_id=' + app.data.kid,
-              //               header: {
-              //                 'content-type': 'application/json'
-              //               },
-              //               method: "GET",
-              //               success: function (res) {
-              //                 console.log("获取领取码支付", res);
-              //                 let status = res.data.status;
-              //                 if (status == 1) {
-              //                   that.setData({
-              //                     ReceiveCode: res.data.data,
-              //                     finish:true
-              //                   })
-              //                 } else {
-              //                   //tips.alert(res.data.msg);
-              //                   console.log(res.data.msg);
-              //                   that.setData({
-              //                     ReceiveCode: false
-              //                   })
-              //                 }
-              //               }
-              //             })
+              wx.request({
+                url: apiurl + "bargain/buy?sign=" + sign + '&operator_id=' + app.data.kid,
+                data:{
+                  bargain_id: that.data.bargain_id
+                },
+                header: {
+                  'content-type': 'application/json'
+                },
+                method: "GET",
+                success: function (res) {
+                  console.log("购买", res);
+                  let status = res.data.status;
+                  if (status == 1) {
+                    console.log(res.data.data);
+                    wx.requestPayment({
+                      timeStamp: res.data.data.timeStamp,
+                      nonceStr: res.data.data.nonceStr,
+                      package: res.data.data.package,
+                      signType: res.data.data.signType,
+                      paySign: res.data.data.paySign,
+                      'success': function (res) {  //成功
+                          tips.success('支付成功！');
+                          // wx.showLoading({
+                          //   title: '领取码生成中！',
+                          // })
+                          // 领取码
+                          console.log("支付完成请求领取码",apiurl + "bargain/get-code?sign=" + sign + '&operator_id=' + app.data.kid);
+                          wx.request({
+                            url: apiurl + "bargain/get-code?sign=" + sign + '&operator_id=' + app.data.kid,
+                            header: {
+                              'content-type': 'application/json'
+                            },
+                            method: "GET",
+                            success: function (res) {
+                              console.log("获取领取码支付", res);
+                              let status = res.data.status;
+                              if (status == 1) {
+                                that.setData({
+                                  ReceiveCode: res.data.data,
+                                  finish:true
+                                })
+                              } else {
+                                //tips.alert(res.data.msg);
+                                console.log(res.data.msg);
+                                that.setData({
+                                  ReceiveCode: false
+                                })
+                              }
+                            }
+                          })
                          
                          
-              //         },
-              //         'fail': function (res) {  //失败
-              //           tips.alert('支付失败！')
-              //         }
+                      },
+                      'fail': function (res) {  //失败
+                        tips.alert('支付失败！')
+                      }
                       
-              //       })
-              //       wx.hideLoading()
-              //     } else {
-              //       tips.alert(res.data.msg);
-              //     }
-              //   }
-              // })
+                    })
+                    wx.hideLoading()
+                  } else {
+                    tips.alert(res.data.msg);
+                  }
+                }
+              })
             }
           }
         })
     }
+  },
+  finishClose(){
+    this.setData({
+      finish:false
+    })
+  },
+  shareClose(){
+    this.setData({
+      share:false
+    })
   },
   // 复制二维码
   mine() {

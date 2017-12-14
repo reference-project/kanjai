@@ -1,5 +1,5 @@
 <!--index.wxml-->
-<view class="container {{share==true?'hidden':''}}" >
+<view class="container {{share|| finish == true?'hidden':''}}" >
       <swiper class="swiper" wx:if="{{lunbo.length !=0}}"  bindtap="imgPreview"  indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" indicator-color="#fff" indicator-active-color="#ff4444">
       <block wx:for="{{lunbo}}">
         <swiper-item>
@@ -51,13 +51,13 @@
         <view wx:for="{{rules}}" wx:key="{{index}}">{{item}}</view>
     </view>  
   </view>
-<view class='bg' wx:if="{{share}}"></view>
+<view class='bg' wx:if="{{share}}" bindtap='shareClose'></view>
 <view class='footer' wx:if="{{share}}"> 
     <button form-type="submit" open-type='share'>转发</button>
     <view bindtap='poster' class='poster'>朋友圈海报</view>
     <view bindtap='cancel' class='cancel'>取消</view>
 </view>
-<view class='bg' wx:if="{{finish}}"></view>
+<view class='bg' wx:if="{{finish}}" bindtap='finishClose'></view>
 <view class='kanjia' wx:if="{{finish}}">
     <image src='{{kf}}' mode='widthFix' bindtap='seeEwm'></image>
     <view class='less'>添加客服微信领取</view>

@@ -116,17 +116,14 @@ Page({
     let that = this;
     let stock = that.data.stock;
     let sign = wx.getStorageSync('sign');
-    console.log('库存：',stock);
-    console.log('bargain_id:',that.data.bargain_id)
-    console.log('already_bargain',that.data.already_bargain)
-    // wx.navigateTo({
-    //   url: '../inform/inform?bargain_id=' + that.data.bargain_id
-    // })
+    console.log('库存：',stock);;
+    console.log('bargain_id:',that.data.bargain_id);
+    console.log('already_bargain',that.data.already_bargain);
     if (stock > 0){ //have
-
       console.log('砍价already_bargain',that.data.already_bargain)
       if (that.data.already_bargain == false){ //未发起过
-      console.log("请求砍价id：",apiurl + "bargain/create-bargain?sign=" + sign + '&operator_id=' + app.data.kid +'&goods_id='+that.data.informAll.goods_id)
+        console.log('未发起过')
+          console.log("请求砍价id：",apiurl + "bargain/create-bargain?sign=" + sign + '&operator_id=' + app.data.kid +'&goods_id='+that.data.informAll.goods_id)
         wx.request({
           url: apiurl + "bargain/create-bargain?sign=" + sign + '&operator_id=' + app.data.kid,
           data: {
@@ -151,16 +148,17 @@ Page({
               console.log(res.data.data);
               tips.alert('获取bargain_id失败！')
             }
-            
             wx.hideLoading()
           }
         })
       }else{ 
+        console.log('已发起过')
         wx.navigateTo({
           url: '../inform/inform?bargain_id=' + that.data.already_bargain
         })
       }
     }else{ //nohave
+      console.log('没有库存')
       if (that.data.already_bargain == false) { //未发起过
         wx.showModal({
           content: '已无更多库存，无法发起活动',
@@ -169,9 +167,9 @@ Page({
         })
       } 
       else {
-          wx.navigateTo({
-            url: '../inform/inform?bargain_id=' + that.data.already_bargain
-          })
+        wx.navigateTo({
+          url: '../inform/inform?bargain_id=' + that.data.already_bargain
+        })
       }
       
     }

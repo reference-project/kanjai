@@ -14,7 +14,7 @@
               <text wx:if="{{activity}}">正在进行中</text>
               <text wx:else>活动已结束</text>
           </view>
-          <view class='produce'> 
+          <view class='produce' bindtap='receive'> 
             <!--  -->
               <image src="{{goods_thumb[0]}}" mode='aspectFill'></image>
               <view class='text'>
@@ -24,7 +24,7 @@
                           <view>最低￥<text class='big'>0.00</text></view>   
                           <text class='color'>原价￥{{informAll.goods_price}}</text>
                       </view>
-                      <view class='right buttons' bindtap='receive' data-goods_id="{{informAll.goods_id}}">
+                      <view class='right buttons' data-goods_id="{{informAll.goods_id}}">
                           <view class='button'>去砍价</view>
                       </view>
                   </view> 
